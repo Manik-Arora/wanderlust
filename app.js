@@ -6,6 +6,8 @@ const methodOverride = require("method-override");
 const { MONGO_URL } = require("./constants");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 const listings = require("./routes/listing");
 const reviews = require("./routes/review");
@@ -29,8 +31,27 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUnitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 27 * 60 * 60 * 1000,
+    maxAge: 7 * 27 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
+};
 app.get("/", (req, res) => {
   res.redirect("/listings");
+});
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
 
 app.use("/listings", listings);
