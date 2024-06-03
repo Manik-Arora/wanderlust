@@ -16,6 +16,10 @@ const listingRouter = require("./routes/listing");
 const reviewRouter = require("./routes/review");
 const userRouter = require("./routes/user");
 
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
+}
+
 main()
   .then(() => {
     console.log("Connected to DB");
