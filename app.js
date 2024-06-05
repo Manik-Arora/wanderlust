@@ -49,9 +49,10 @@ const sessionOptions = {
     httpOnly: true,
   },
 };
-app.get("/", (req, res) => {
-  res.redirect("/listings");
-});
+
+// app.get("/", (req, res) => {
+//   res.redirect("/listings");
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());
